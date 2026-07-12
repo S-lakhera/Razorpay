@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import userRouter from "./modules/user/user.routes.js";
 import productRouter from "./modules/product/product.routes.js";
+import cartRouter from "./modules/cart/cart.routes.js";
 
 const app = express();
 
@@ -21,6 +22,9 @@ app.use("/api/user", userRouter);
 
 // product routes
 app.use("/api/products", productRouter);
+
+// cart routes
+app.use("/api/cart", cartRouter);
 
 // global error handler
 app.use(errorHandler);
