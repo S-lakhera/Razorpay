@@ -1,13 +1,26 @@
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { Eye, EyeOff } from 'lucide-react';
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { Eye, EyeOff } from "lucide-react";
+import { loginUser } from "../../api/auth.api";
 
 export const Login = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
   const [showPassword, setShowPassword] = useState(false);
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    try {
+      const response = await loginUser(data.email, data.password);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      reset();
+    }
   };
 
   return (
@@ -20,7 +33,10 @@ export const Login = () => {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300" htmlFor="email">
+            <label
+              className="text-sm font-medium text-gray-300"
+              htmlFor="email"
+            >
               Email
             </label>
             <input
@@ -30,11 +46,18 @@ export const Login = () => {
               className="w-full px-4 py-3 bg-black border border-[#313131] rounded-lg focus:outline-none focus:border-[#00c8ff] focus:ring-1 focus:ring-[#00c8ff] transition-colors"
               {...register("email", { required: "Email is required" })}
             />
-            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
+            {errors.email && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.email.message}
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300" htmlFor="password">
+            <label
+              className="text-sm font-medium text-gray-300"
+              htmlFor="password"
+            >
               Password
             </label>
             <div className="relative">
@@ -53,15 +76,26 @@ export const Login = () => {
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
-            {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
+            {errors.password && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.password.message}
+              </p>
+            )}
           </div>
 
           <div className="flex items-center justify-between text-sm">
             <label className="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" className="w-4 h-4 rounded border-[#313131] bg-black text-[#00c8ff] focus:ring-[#00c8ff]" />
-              <span className="text-gray-400 hover:text-white transition-colors">Remember me</span>
+              <input
+                type="checkbox"
+                className="w-4 h-4 rounded border-[#313131] bg-black text-[#00c8ff] focus:ring-[#00c8ff]"
+              />
+              <span className="text-gray-400 hover:text-white transition-colors">
+                Remember me
+              </span>
             </label>
-            <a href="#" className="text-[#00c8ff] hover:underline">Forgot password?</a>
+            <a href="#" className="text-[#00c8ff] hover:underline">
+              Forgot password?
+            </a>
           </div>
 
           <button
@@ -73,7 +107,7 @@ export const Login = () => {
         </form>
 
         <p className="text-center text-sm text-gray-400 mt-6">
-          Don't have an account?{' '}
+          Don't have an account?{" "}
           <a href="/register" className="text-[#00c8ff] hover:underline">
             Register here
           </a>
